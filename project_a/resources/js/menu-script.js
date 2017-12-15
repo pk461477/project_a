@@ -1,25 +1,9 @@
 $(document).ready(function() {
    
-    /* For the sticky navigation */
-    /*$('.js--section-features').waypoint(function(direction) {
-        if (direction == "down") {
-            $('nav').addClass('sticky');
-    } else {
-            $('nav').removeClass('sticky');
-            }
-    }, {
-    offset: '200px;'
-    });*/
-    
-    
     /* Click for Sub Menu */
     $(".js--menu-nav").click(function(){
         $(".sub-menu").slideToggle("slow");
     });
-    
-    
-    
-    
     
     /* Animations on Scroll */
     $('.js--wp-1').waypoint(function(direction) {
@@ -39,7 +23,6 @@ $(document).ready(function() {
     }, {
         offset: '60%'
     });
-    
     
     
     /*Breakfast Photo Slideshow */
@@ -323,6 +306,21 @@ $(document).ready(function() {
     var slideNum = $('.menu-box').length,
     wrapperWidth = 100 * slideNum,
     slideWidth = 100 / slideNum;
+
+    // Make sure page is properly initialized
+    var url_loc = "#" + $(location).attr('href').split("#")[1];
+    var menu_loc = $('.selected').attr('href');
+    console.log('hi');
+    // External link was clicked in index.html
+    if (url_loc != menu_loc){
+        $('.scrollitem.selected').removeClass('selected');
+        $('[href=\\' + url_loc + ']').addClass('selected');
+        var slide_list = []
+        $('.scrollitem').each(function(){slide_list.push($(this).attr('href'))});
+        var curr_idx = slide_list.indexOf(url_loc)
+        var margin = curr_idx * -100 + '%';
+        $('.menu-slides').css('margin-left', margin)
+    }
         
     $('.menu-slides').width(wrapperWidth + '%');
     $('.menu-box').width(slideWidth + '%');
@@ -357,18 +355,20 @@ $(document).ready(function() {
           location.hostname == this.hostname
         ) {
           // Figure out element to scroll to
+          var targ_hash = this.hash
           var target = $(this.hash);
           target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+          var $target = $(target);
           // Does a scroll target exist?
           if (target.length) {
             // Only prevent default if animation is actually gonna happen
             event.preventDefault();
+            $(location).attr('href', $(location).attr('href').split("#")[0]+targ_hash);
             $('html, body').animate({
               scrollTop: target.offset().top
             }, 1000, function() {
               // Callback after animation
               // Must change focus!
-              var $target = $(target);
               $target.focus();
               if ($target.is(":focus")) { // Checking if the target was focused
                 return false;
